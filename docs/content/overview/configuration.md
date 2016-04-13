@@ -95,8 +95,10 @@ Following is a list of Hugo-defined variables that you can configure and their c
     disableRSS:                 false
     # Do not build Sitemap file
     disableSitemap:             false
-    # Do not build robots.txt file
-    disableRobotsTXT:           false
+    # Build robots.txt file
+    enableRobotsTXT:            false
+    # Do not render 404 page
+    disable404:                 false
     # edit new content with this editor, if provided
     editor:                     ""
     # Enable Emoji emoticons support for page content.
@@ -126,6 +128,8 @@ Following is a list of Hugo-defined variables that you can configure and their c
     preserveTaxonomyNames:      false
     # filesystem path to write files to
     publishdir:                 "public"
+    # enables syntax guessing for code fences without specified language
+    pygmentsCodeFencesGuessSyntax: false
     # color-codes for highlighting derived from this style
     pygmentsStyle:              "monokai"
     # true: use pygments-css or false: color-codes directly
@@ -255,7 +259,7 @@ Its behavior can be modified with the <code>latexDashes</code> flag listed below
 
 <tr>
 <td><code><strong>plainIDAnchors</strong></code></td>
-<td><code>false</code></td>
+<td><code>true</code></td>
 <td><code>FootnoteAnchorPrefix</code> and <code>HeaderIDSuffix</code></td>
 </tr>
 <tr>
@@ -287,6 +291,38 @@ Its behavior can be modified with the <code>latexDashes</code> flag listed below
 <td class="purpose-description" colspan="2">Extensions in this option won't be loaded.<br>
 <small><strong>Example:</strong>&nbsp;Add <code>"autoHeaderIds"</code> to disable <code>EXTENSION_AUTO_HEADER_IDS</code>.</small></td>
 </tr>
+
+<tr>
+<td><code><strong>sourceRelativeLinksEval</strong></code></td>
+<td><code>false</code></td>
+<td><code>none</code></td>
+</tr>
+<tr>
+<td class="purpose-title">Purpose:</td>
+<td class="purpose-description" colspan="2">Source file based relative linking (a la Github).<br>
+Relative links to markdown and static files within a page will be evaluated relative to the
+location of that page, and then converted to html links during rendering. For example,
+`[example](../other/page.md)` in `content/total/overview.md` will be linked to
+`content/other/overview.md`, and then rendered to `/other/overview/` in the HTML output.
+</td>
+</tr>
+
+<tr>
+<td><code><strong>sourceRelativeLinksProjectFolder</strong></code></td>
+<td><code>"/docs/content"</code></td>
+<td><code>none</code></td>
+</tr>
+<tr>
+<td class="purpose-title">Purpose:</td>
+<td class="purpose-description" colspan="2">Source file based relative linking Hugo Project sub-folder.<br>
+When `sourceRelativeLinksEval` is enabled, source level paths may contain an absolute respository path to the
+markdown or static file which needs to be removed before trying to match it with the intended link.
+ For example, if your documentation is in `/docs/content`, then
+`[example](/docs/content/other/page.md)` in `/docs/content/total/overview.md` will be linked to
+`/docs/content/other/overview.md`, and then rendered to `/other/overview/` in the HTML output.
+</td>
+</tr>
+
 </tbody>
 </table>
 

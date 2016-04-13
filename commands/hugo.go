@@ -126,7 +126,8 @@ var (
 	buildWatch            bool
 	canonifyURLs          bool
 	cleanDestination      bool
-	disableRobotsTXT      bool
+	enableRobotsTXT       bool
+	disable404            bool
 	disableRSS            bool
 	disableSitemap        bool
 	draft                 bool
@@ -214,9 +215,9 @@ func initHugoBuildCommonFlags(cmd *cobra.Command) {
 	cmd.Flags().BoolVar(&cleanDestination, "cleanDestinationDir", false, "Remove files from destination not found in static directories")
 	cmd.Flags().BoolVarP(&draft, "buildDrafts", "D", false, "include content marked as draft")
 	cmd.Flags().BoolVarP(&future, "buildFuture", "F", false, "include content with publishdate in the future")
+	cmd.Flags().BoolVar(&disable404, "disable404", false, "Do not render 404 page")
 	cmd.Flags().BoolVar(&disableRSS, "disableRSS", false, "Do not build RSS files")
 	cmd.Flags().BoolVar(&disableSitemap, "disableSitemap", false, "Do not build Sitemap file")
-	cmd.Flags().BoolVar(&disableRobotsTXT, "disableRobotsTXT", false, "Do not build Robots TXT file")
 	cmd.Flags().StringVarP(&source, "source", "s", "", "filesystem path to read files relative from")
 	cmd.Flags().StringVarP(&contentDir, "contentDir", "c", "", "filesystem path to content directory")
 	cmd.Flags().StringVarP(&layoutDir, "layoutDir", "l", "", "filesystem path to layout directory")
@@ -267,6 +268,7 @@ func loadDefaultSettings() {
 	viper.SetDefault("cleanDestinationDir", false)
 	viper.SetDefault("Watch", false)
 	viper.SetDefault("MetaDataFormat", "toml")
+	viper.SetDefault("Disable404", false)
 	viper.SetDefault("DisableRSS", false)
 	viper.SetDefault("DisableSitemap", false)
 	viper.SetDefault("DisableRobotsTXT", false)
@@ -309,6 +311,7 @@ func loadDefaultSettings() {
 	viper.SetDefault("DisablePathToLower", false)
 	viper.SetDefault("HasCJKLanguage", false)
 	viper.SetDefault("EnableEmoji", false)
+	viper.SetDefault("PygmentsCodeFencesGuessSyntax", false)
 }
 
 // InitializeConfig initializes a config file with sensible default configuration flags.
@@ -357,14 +360,17 @@ func InitializeConfig(subCmdVs ...*cobra.Command) error {
 		if flagChanged(cmdV.Flags(), "canonifyURLs") {
 			viper.Set("CanonifyURLs", canonifyURLs)
 		}
+		if flagChanged(cmdV.Flags(), "disable404") {
+			viper.Set("Disable404", disable404)
+		}
 		if flagChanged(cmdV.Flags(), "disableRSS") {
 			viper.Set("DisableRSS", disableRSS)
 		}
 		if flagChanged(cmdV.Flags(), "disableSitemap") {
 			viper.Set("DisableSitemap", disableSitemap)
 		}
-		if flagChanged(cmdV.Flags(), "disableRobotsTXT") {
-			viper.Set("DisableRobotsTXT", disableRobotsTXT)
+		if flagChanged(cmdV.Flags(), "enableRobotsTXT") {
+			viper.Set("EnableRobotsTXT", enableRobotsTXT)
 		}
 		if flagChanged(cmdV.Flags(), "pluralizeListTitles") {
 			viper.Set("PluralizeListTitles", pluralizeListTitles)

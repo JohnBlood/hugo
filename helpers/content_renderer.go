@@ -35,7 +35,7 @@ type HugoHTMLRenderer struct {
 }
 
 func (renderer *HugoHTMLRenderer) BlockCode(out *bytes.Buffer, text []byte, lang string) {
-	if viper.GetBool("PygmentsCodeFences") {
+	if viper.GetBool("PygmentsCodeFences") && (lang != "" || viper.GetBool("PygmentsCodeFencesGuessSyntax")) {
 		opts := viper.GetString("PygmentsOptions")
 		str := html.UnescapeString(string(text))
 		out.WriteString(Highlight(str, lang, opts))
@@ -49,6 +49,7 @@ func (renderer *HugoHTMLRenderer) Link(out *bytes.Buffer, link []byte, title []b
 		// Use the blackfriday built in Link handler
 		renderer.Renderer.Link(out, link, title, content)
 	} else {
+		// set by SourceRelativeLinksEval
 		newLink, err := renderer.LinkResolver(string(link))
 		if err != nil {
 			newLink = string(link)
@@ -62,6 +63,7 @@ func (renderer *HugoHTMLRenderer) Image(out *bytes.Buffer, link []byte, title []
 		// Use the blackfriday built in Image handler
 		renderer.Renderer.Image(out, link, title, alt)
 	} else {
+		// set by SourceRelativeLinksEval
 		newLink, err := renderer.FileResolver(string(link))
 		if err != nil {
 			newLink = string(link)
@@ -78,7 +80,7 @@ type HugoMmarkHTMLRenderer struct {
 }
 
 func (renderer *HugoMmarkHTMLRenderer) BlockCode(out *bytes.Buffer, text []byte, lang string, caption []byte, subfigure bool, callouts bool) {
-	if viper.GetBool("PygmentsCodeFences") {
+	if viper.GetBool("PygmentsCodeFences") && (lang != "" || viper.GetBool("PygmentsCodeFencesGuessSyntax")) {
 		str := html.UnescapeString(string(text))
 		out.WriteString(Highlight(str, lang, ""))
 	} else {
